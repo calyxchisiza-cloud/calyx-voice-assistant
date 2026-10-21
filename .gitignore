@@ -1,0 +1,15 @@
+node_modules/
+.next/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+.DS_Store
+
+# Desktop packaging output
+dist-desktop/
+desktop/calyx-root.txt
+build/icon.ico
+build/icon-*.png
+build/icon.png
+

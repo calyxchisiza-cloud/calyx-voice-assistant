@@ -1,0 +1,38 @@
+{
+  "name": "calyx-voice-console",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CALYX — a local, voice-first PC assistant.",
+  "main": "desktop/main.js",
+  "packageManager": "pnpm@10.12.4",
+  "scripts": {
+    "dev": "next dev -H 127.0.0.1",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "icon": "node scripts/make-icon.mjs",
+    "record-root": "node scripts/record-root.cjs",
+    "desktop": "electron .",
+    "desktop:installer": "pnpm build && pnpm icon && pnpm record-root && electron-builder --config electron-builder.config.cjs --win nsis"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.4",
+    "nodemailer": "^10.1.7",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/node": "^22.10.2",
+    "@types/nodemailer": "^8.0.2",
+    "@types/react": "^19.0.3",
+    "@types/react-dom": "^19.0.2",
+    "electron": "^44.9.1",
+    "electron-builder": "^26.15.3",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.5.4",
+    "typescript": "^5.7.2"
+  }
+}

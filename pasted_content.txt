@@ -1,0 +1,323 @@
+# PROJECT: JARVIS — Voice-First AI Assistant Web Application
+
+Act as a senior full-stack engineer, AI systems architect, UI/UX designer, and software security specialist. Build a complete, functional, production-minded prototype of a JARVIS-inspired personal AI assistant that prioritizes voice interaction over typing.
+
+Do not merely explain how to build it or produce a static mockup. Implement the application, create the necessary files, install compatible dependencies where possible, run the available checks, fix errors, and provide clear setup instructions.
+
+## 1. Technology Stack
+
+Use the following stack:
+
+- **Frontend:** Next.js, React, TypeScript.
+- **Backend:** Node.js using Next.js server-side API routes.
+- **Styling:** Tailwind CSS or a well-structured modern CSS system.
+- **AI:** OpenAI Realtime API for low-latency, bidirectional voice conversations.
+- **Voice transport:** WebRTC.
+- **Audio processing:** Web Audio API for waveform visualization and audio analysis.
+- **Icons:** Lucide React.
+- **Configuration:** Environment variables in `.env.local`.
+
+Use compatible, stable dependencies. Do not introduce unnecessary frameworks or infrastructure.
+
+## 2. Core Experience
+
+The application should feel like a personal AI assistant, not a chatbot with a microphone button.
+
+When I open the application, I should see a polished assistant interface that is ready to interact with me. The primary interaction must be speaking naturally.
+
+I should be able to:
+- Talk to the assistant without typing.
+- Receive spoken answers with minimal delay.
+- Interrupt the assistant while it is speaking.
+- Continue the conversation naturally, with context retained during the session.
+- See a live transcript of what I say and what the assistant responds.
+- Switch to text input whenever I choose.
+- Stop the microphone session immediately.
+- Reconnect gracefully if the connection fails.
+
+Avoid forcing me to click a button before every individual sentence. Once I start a voice session, the assistant should listen for my speech, detect when I finish, respond, and return to listening automatically.
+
+## 3. Voice and Personality
+
+Use the OpenAI Realtime voice **Marin** as the default voice.
+
+The assistant should have a distinctive, polished personality inspired by the experience of JARVIS: composed, intelligent, articulate, calm, proactive when appropriate, and concise.
+
+Configure its system instructions to:
+- Speak naturally rather than sounding like a text-to-speech reader.
+- Use short, conversational responses by default.
+- Provide detailed explanations when requested.
+- Avoid reading Markdown formatting, code symbols, or unnecessary interface text aloud.
+- Ask follow-up questions only when necessary.
+- Avoid repetitive greetings and unnecessary announcements.
+- Never claim to have completed an action it did not actually perform.
+
+Provide a voice-settings interface where users can select another supported voice if desired. Marin should remain the default.
+
+## 4. Greeting Behaviour
+
+The greeting preference must be configurable:
+
+- **Sometimes:** Greet me briefly when appropriate, such as the first successful session of a visit or when explicitly activated after a long idle period.
+- **Never:** Do not greet me automatically.
+
+Do not greet me every time the connection reconnects, the microphone changes state, or a component rerenders.
+
+The greeting must be spoken audio, not merely displayed as text.
+
+## 5. Wake-Word Activation
+
+Implement wake-word activation using the phrase:
+
+**“Hey JARVIS”**
+
+Expected behaviour:
+
+1. I enable wake-word mode.
+2. The application listens for the wake phrase using a supported browser-based or local wake-word detection mechanism.
+3. When the phrase is detected, the assistant starts its voice session or activates the existing session.
+4. It acknowledges me briefly and begins listening for my actual request.
+5. After answering, it returns to listening without requiring me to click again.
+6. I can disable wake-word mode at any time.
+
+Important engineering requirements:
+- Check browser support before enabling wake-word detection.
+- Explain microphone permissions clearly.
+- Avoid starting multiple microphone streams or speech-recognition instances.
+- Handle browser suspension, microphone permission denial, and reconnection.
+- Do not falsely claim that browser speech recognition works offline or reliably in every browser.
+- If continuous wake-word detection is not feasible in a browser, implement the best practical fallback and explain the limitation.
+- Keep wake-word detection separate from the Realtime conversation microphone when appropriate, so both systems do not compete for the microphone.
+
+## 6. Audio Waveform Visualizer
+
+Create an elegant, animated audio waveform as the central visual element.
+
+The waveform must respond to actual audio activity, not just play a decorative animation.
+
+Requirements:
+- Analyze incoming assistant audio using the Web Audio API.
+- Make the waveform visibly react while the assistant speaks.
+- Show a distinct visual response when I am speaking.
+- Display a subtle idle animation when nothing is happening.
+- Distinguish listening, thinking, speaking, connecting, and error states.
+- Ensure the waveform remains smooth and responsive without excessive CPU usage.
+- Clean up animation frames, audio contexts, and media tracks when the session ends.
+
+The visualizer should feel futuristic and sophisticated, inspired by a fictional AI assistant interface without copying a specific movie screen.
+
+## 7. User Interface and Visual Design
+
+Use a **midnight-blue theme** with refined cyan and ice-blue accents.
+
+The interface must look like a premium AI product, not a generic dashboard template.
+
+Design direction:
+- Midnight-blue background with subtle atmospheric gradients.
+- A central audio waveform or assistant visualization.
+- Clean typography and carefully controlled spacing.
+- Restrained glassmorphism and translucent panels.
+- Subtle glowing borders and state transitions.
+- Minimal but informative system-status indicators.
+- Professional icons and smooth animations.
+- A polished conversation transcript panel.
+- A compact settings interface.
+- Responsive layouts for desktop, tablet, and mobile.
+- Accessible contrast, visible focus states, and reduced-motion support.
+
+Avoid excessive neon, clutter, huge empty spaces, and a generic dark dashboard full of unnecessary cards.
+
+The assistant visualization should be the visual focus.
+
+### Main interface components
+
+1. **Header**
+   - JARVIS branding.
+   - Connection status.
+   - Settings button.
+
+2. **Central assistant visualization**
+   - Animated waveform.
+   - Listening/speaking indicators.
+   - Assistant activity label.
+
+3. **Primary controls**
+   - Start conversation.
+   - Stop conversation.
+   - Enable/disable wake word.
+   - Toggle text input.
+
+4. **Conversation panel**
+   - User transcript.
+   - Assistant transcript.
+   - Live response text as it arrives.
+   - Automatic scrolling to the latest message.
+   - Clear empty state.
+
+5. **Settings**
+   - Voice selection.
+   - Greeting preference.
+   - Wake-word configuration.
+   - Microphone status.
+   - Audio output information.
+
+6. **Status information**
+   - Connecting.
+   - Listening.
+   - Thinking.
+   - Speaking.
+   - Reconnecting.
+   - Error.
+
+Do not show a welcome message or greeting on every page render.
+
+## 8. Secure AI API Integration
+
+Security is mandatory.
+
+Never expose the permanent OpenAI API key to the browser.
+
+Implement a server-side endpoint that:
+1. Reads the API key from an environment variable.
+2. Creates a short-lived Realtime client credential using the official API.
+3. Applies the selected supported voice and appropriate session instructions.
+4. Returns only the temporary client credential and necessary non-secret session information.
+5. Returns structured errors when the API is unavailable or the configuration is invalid.
+
+The browser should use the temporary credential to establish the WebRTC connection.
+
+Additional requirements:
+- Never place secrets in frontend source code.
+- Never use a `NEXT_PUBLIC_` environment variable for the permanent API key.
+- Disable caching for credential responses.
+- Validate inputs and handle failed API requests.
+- Add sensible request limits or rate limiting to prevent abuse.
+- Add production security headers and origin protections where appropriate.
+- Avoid logging API keys, temporary credentials, or sensitive audio data.
+- Explain API costs and credential management in the documentation.
+- Do not store recordings or conversation transcripts permanently unless explicitly configured.
+
+Use current official API documentation to verify the Realtime session-creation endpoint, authentication flow, event names, supported models, and voice configuration. Do not invent API endpoints, event names, or unsupported parameters.
+
+## 9. Real-Time Conversation Architecture
+
+Implement a complete WebRTC voice session.
+
+The session must:
+- Capture microphone input.
+- Establish the WebRTC connection.
+- Send and receive real-time audio.
+- Support automatic speech turn detection.
+- Preserve the conversation context within the active session.
+- Stream assistant transcript updates.
+- Handle interruptions and cancellation of ongoing responses.
+- Recover cleanly from connection failures.
+- Stop all active audio and microphone resources when disconnected.
+
+Use the correct Realtime API event names and documented message formats.
+
+Make the UI state reflect the real session state rather than assuming that a button click means the connection succeeded.
+
+Avoid race conditions, duplicate event handlers, duplicate responses, and microphone resource leaks.
+
+## 10. Text Interaction
+
+Voice is the default interaction mode, but provide optional text input.
+
+When text mode is enabled:
+- Display a compact input field.
+- Allow Enter to send and Shift+Enter for a newline if a multiline editor is used.
+- Send text through the active Realtime conversation.
+- Read the assistant response aloud.
+- Display both the sent message and the resulting response.
+- Preserve the existing conversation context.
+
+Do not force users to type if they prefer voice.
+
+## 11. Error Handling
+
+Implement user-friendly error states for:
+- Missing API key.
+- Invalid API credentials.
+- Insufficient API permissions or unavailable models.
+- API quota or billing problems.
+- Microphone permission denial.
+- Unsupported browser features.
+- WebRTC connection failures.
+- Network disconnection.
+- Audio playback restrictions.
+- Failed wake-word detection.
+
+Display useful messages in the interface and provide actionable recovery steps.
+
+Never expose stack traces, API secrets, or internal credentials to users.
+
+## 12. Project Structure and Code Quality
+
+Organize the code into maintainable components and modules. Separate the UI, voice-session management, audio visualization, wake-word detection, settings, and API routes.
+
+Use TypeScript types for session states, messages, configuration, and Realtime events where practical.
+
+Requirements:
+- No placeholder implementations for core voice functionality.
+- No fake microphone status.
+- No simulated AI responses presented as real responses.
+- No dead buttons.
+- No missing imports.
+- No hardcoded secrets.
+- No unnecessary dependencies.
+- No giant monolithic component if the architecture can reasonably be separated.
+
+Persist non-sensitive preferences locally if appropriate, such as voice selection and greeting preference. Never store API keys or sensitive credentials in local storage.
+
+## 13. Testing and Verification
+
+After implementing the application:
+
+1. Install dependencies.
+2. Run TypeScript checks.
+3. Run linting.
+4. Run a production build.
+5. Fix any errors that arise.
+6. Test the major UI interactions.
+7. Verify that the server-side API route never returns the permanent API key.
+8. Inspect the WebRTC connection and event handling for correctness.
+9. Clearly distinguish automated checks from tests requiring a real API key and microphone.
+
+If you cannot execute a check in the available environment, state that explicitly. Do not claim that the application has been tested when it has not.
+
+## 14. Deliverables
+
+Produce the following:
+
+- Complete working source code.
+- All required configuration files.
+- `.env.example` containing placeholders only.
+- A clear README with installation and troubleshooting instructions.
+- Exact commands to run the project locally.
+- Instructions for configuring the OpenAI API key securely.
+- A brief architecture explanation.
+- A list of known browser limitations.
+- A list of remaining production-hardening tasks.
+
+If you have access to a coding workspace, create and modify the actual project files directly. Do not stop after generating a plan or printing snippets.
+
+## 15. Implementation Order
+
+Work in this sequence:
+
+**Phase 1:** Inspect the workspace, establish the project structure, and verify current Realtime API documentation.
+
+**Phase 2:** Build the responsive interface and visual system.
+
+**Phase 3:** Implement secure server-side session creation.
+
+**Phase 4:** Implement WebRTC audio, bidirectional conversation, transcripts, interruption handling, and real audio-reactive visualization.
+
+**Phase 5:** Add wake-word detection, configurable greetings, voice settings, and optional text input.
+
+**Phase 6:** Test, debug, improve accessibility, document setup, and run production checks.
+
+Begin by inspecting the current workspace and then implement the application. Make sensible technical decisions without asking me questions unless a decision genuinely blocks progress.
+
+**Final acceptance criterion:** I should be able to open the web application, enable my microphone, speak naturally to JARVIS, hear a Marin-voiced response, see the waveform react to the actual spoken audio, interrupt the assistant, and continue talking without typing every message.
